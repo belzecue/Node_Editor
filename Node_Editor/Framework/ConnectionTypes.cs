@@ -113,8 +113,33 @@ namespace NodeEditorFramework
 		private IConnectionTypeDeclaration declaration;
 		public Type Type { get; private set; }
 		public Color Color { get; private set; }
-		public Texture2D InKnobTex { get; private set; }
-		public Texture2D OutKnobTex { get; private set; }
+		public Texture2D InKnobTex { 
+			get {
+				if(m_InKnobTex!=null){
+					return m_InKnobTex;
+				}
+				m_InKnobTex = ResourceManager.LoadTexture ("Textures/In_Knob.png");
+				return  m_InKnobTex;
+			} 
+			private set {
+				m_InKnobTex = value;
+			}
+		}
+		public Texture2D OutKnobTex {
+			get {
+				if(m_OutKnobTex!=null){
+					return m_OutKnobTex;
+				}
+				m_OutKnobTex = ResourceManager.LoadTexture ("Textures/Out_Knob.png");
+				return m_OutKnobTex;
+			} 
+			private set {
+				m_OutKnobTex = value;
+			}
+		}
+
+		Texture2D m_InKnobTex;
+		Texture2D m_OutKnobTex;
 
 		internal TypeData (IConnectionTypeDeclaration typeDecl) 
 		{
@@ -147,7 +172,7 @@ namespace NodeEditorFramework
 			declaration = null;
 			Type = typeof(object);
 			Color = Color.white;
-			InKnobTex = ResourceManager.LoadTexture ("Textures/In_Knob.png");
+
 			OutKnobTex = ResourceManager.LoadTexture ("Textures/Out_Knob.png");
 
 			if (InKnobTex == null || InKnobTex == null)

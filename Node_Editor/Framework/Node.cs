@@ -210,6 +210,7 @@ namespace NodeEditorFramework
 			GUILayout.BeginArea (bodyRect, GUI.skin.box);
 			// Call NodeGUI
 			GUI.changed = false;
+
 			NodeGUI ();
 			// End NodeGUI frame
 			GUILayout.EndArea ();
@@ -537,8 +538,27 @@ namespace NodeEditorFramework
 			recursiveSearchSurpassed = null;
 			startRecursiveSearchNode = null;
 		}
+		#endregion
 
 		#endregion
+
+
+		#region BehaviourTree
+		public int Uuid = 0;
+
+		/*
+		public bool setColorFlag = false;
+
+		static Color defaultColor = Color.gray;
+
+		public void ChangeColor(){
+			GUI.backgroundColor = Color.white;
+		}
+
+		public void ResetDefaultColor() {
+			GUI.backgroundColor = defaultColor;
+		}
+		*/
 
 		#endregion
 	}
