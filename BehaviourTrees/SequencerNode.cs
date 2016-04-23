@@ -17,9 +17,23 @@ namespace BehaviourTrees
 
 		private IEnumerator<BehaviourTreeBase> actions;
 
+		private IDisposable	m_dispose;
+
 		public void Initialize(BehaviourTreeBase[] actionArray, int uuid){
 			this.Init(uuid);
 			this.actions = actionArray.ToList().GetEnumerator();
+		}
+
+
+		public override void ObserveInit (BehaviourTreeInstance behaviourTreeInstance)
+		{
+			m_dispose = behaviourTreeInstance.nodeStateDict.ObserveReplace()
+				.Where(p=>p.Key == actions.Current.key)
+				.Subscribe(p=>NextState(p.NewValue, behaviourTreeInstance));
+			while(this.actions.MoveNext()){
+				this.actions.Current.ObserveInit(behaviourTreeInstance);
+			}
+			this.actions.Reset();
 		}
 
 
@@ -27,9 +41,7 @@ namespace BehaviourTrees
 		{
 			base.Execute(behaviourTreeInstance);
 			behaviourTreeInstance.nodeStateDict[this.key] = BehaviourTreeInstance.NodeState.READY;
-			behaviourTreeInstance.nodeStateDict.ObserveReplace()
-				.Where(p=>p.Key == actions.Current.key)
-				.Subscribe(p=>NextState(p.NewValue, behaviourTreeInstance));
+
 			this.actions.MoveNext();
 			this.actions.Current.Execute(behaviourTreeInstance);
 
@@ -45,6 +57,14 @@ namespace BehaviourTrees
 			this.actions.Reset();
 		}
 
+		public override void Delete ()
+		{
+			m_dispose.Dispose();
+			this.actions.Reset();
+			while(this.actions.MoveNext()){
+				this.actions.Current.Delete();
+			}
+		}
 
 		void NextState(BehaviourTreeInstance.NodeState state, BehaviourTreeInstance behaviourTreeInstance){
 			if(state == BehaviourTreeInstance.NodeState.FAILURE){

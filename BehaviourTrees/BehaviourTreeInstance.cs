@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UniRx;
+using System;
 
 namespace BehaviourTrees
 {
@@ -17,7 +18,7 @@ namespace BehaviourTrees
 		/// <summary>
 		/// 終了検知ReactiveProperty
 		/// </summary>
-		public ReactiveProperty<NodeState> finishRP = new ReactiveProperty<NodeState>(NodeState.READY);
+		public ReactiveProperty<NodeState> finishRP;
 
 		/// <summary>
 		/// 各nodeのNodeStateの状態変化を監視するReactiveProperty
@@ -26,6 +27,9 @@ namespace BehaviourTrees
 
 		private BehaviourTreeBase	rootNode;
 
+		private IDisposable	m_addDispose;
+
+		private IDisposable	m_replaceDispose;
 
 		public int nowExcuteUuid {
 			set;get;
@@ -33,16 +37,20 @@ namespace BehaviourTrees
 
 		public BehaviourTreeInstance(BehaviourTreeBase rootNode)
 		{
+			this.finishRP = new ReactiveProperty<NodeState>(NodeState.READY);
+
 			this.rootNode = rootNode;
 
-			this.nodeStateDict.ObserveAdd()
+			m_addDispose = this.nodeStateDict.ObserveAdd()
 				.Where(p=>p.Value == NodeState.READY)
 				.Subscribe(p=>SetCurrentNodeKey(p.Key));
 
-			this.nodeStateDict.ObserveReplace()
+			m_replaceDispose = this.nodeStateDict.ObserveReplace()
 				.Where(p=>p.Key == rootNode.key)
 				.Where(p=>p.NewValue == NodeState.FAILURE || p.NewValue == NodeState.SUCCESS)
 				.Subscribe(p=>Finish(p.NewValue));
+
+			this.rootNode.ObserveInit(this);
 		}
 
 		/// <summary>
@@ -54,13 +62,14 @@ namespace BehaviourTrees
 
 
 		/// <summary>
-		/// 状態をリセットして初めから実行する
+		/// nodeを削除する。
 		/// </summary>
-		public void Reset(){
-			nodeStateDict.Clear();
-			this.finishRP.Value = NodeState.READY;
-			this.rootNode.Reset();
-			this.rootNode.Execute(this);
+		public void Delete(){
+			this.nodeStateDict.Clear();
+			this.rootNode.Delete();
+			this.finishRP.Dispose();
+			this.m_addDispose.Dispose();
+			this.m_replaceDispose.Dispose();
 		}
 
 			

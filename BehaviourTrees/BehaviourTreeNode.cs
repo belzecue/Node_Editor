@@ -31,6 +31,9 @@ namespace BehaviourTrees
 			private set; get;
 		}
 
+
+		public abstract void ObserveInit(BehaviourTreeInstance behaviourTreeInstance);
+
 		public virtual void Execute(BehaviourTreeInstance behaviourTreeInstance) {
 			#if UNITY_EDITOR
 			behaviourTreeInstance.nowExcuteUuid = m_uuid;
@@ -39,6 +42,8 @@ namespace BehaviourTrees
 
 
 		public abstract void Reset();
+
+		public abstract void Delete();
 			
 	}
 }

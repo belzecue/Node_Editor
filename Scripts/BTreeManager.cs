@@ -19,6 +19,9 @@ public class BTreeManager : MonoBehaviour {
 
 	Action m_task;
 
+	uBehaviourTreeNode m_topNode;
+	BehaviourTreeBase	m_bTreeBase;
+
 	// Use this for initialization
 	void Start () {
 		m_task = ChangeColorTask;
@@ -30,11 +33,8 @@ public class BTreeManager : MonoBehaviour {
 		if(startNode==null || startNode.Outputs[0].connections==null){
 			return;
 		}
-		var topNode = startNode.Outputs[0].connections[0].body as uBehaviourTreeNode;
-		var btree = CreateBehaviourTreeBase(topNode);
-		node = new BehaviourTreeInstance(btree);
-		node.finishRP.Where(p=>p!=BehaviourTreeInstance.NodeState.READY).Subscribe(p=>ResetCoroutineStart());
-		node.Excute();
+		m_topNode= startNode.Outputs[0].connections[0].body as uBehaviourTreeNode;
+		CreateNodes(m_topNode);
 	}
 
 
@@ -42,6 +42,20 @@ public class BTreeManager : MonoBehaviour {
 		if(m_task!=null){
 			m_task();
 		}
+	}
+
+
+	void CreateNodes(uBehaviourTreeNode topNode){
+		m_bTreeBase = CreateBehaviourTreeBase(topNode);
+		node = new BehaviourTreeInstance(m_bTreeBase);
+		node.finishRP.Where(p=>p!=BehaviourTreeInstance.NodeState.READY).Subscribe(p=>ResetCoroutineStart());
+		node.finishRP.Value = BehaviourTreeInstance.NodeState.READY;
+		node.Excute();
+	}
+
+
+	void DeleteNodes(){
+		
 	}
 
 
@@ -133,15 +147,13 @@ public class BTreeManager : MonoBehaviour {
 	/// Resets the coroutine start.
 	/// </summary>
 	void ResetCoroutineStart(){
-		StartCoroutine(WaitCoroutine());
+		StartCoroutine(ResetCoroutine());
 	}
 
-	/// <summary>
-	/// Waits the coroutine.
-	/// </summary>
-	/// <returns>The coroutine.</returns>
-	IEnumerator WaitCoroutine(){
-		yield return new WaitForSeconds(1.5f);
-		node.Reset();
+
+	IEnumerator ResetCoroutine(){
+		yield return null;
+		node.Delete();
+		CreateNodes(m_topNode);
 	}
 }

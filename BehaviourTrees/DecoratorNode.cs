@@ -14,6 +14,7 @@ namespace BehaviourTrees
 
 		private Func<BehaviourTreeInstance, ExecutionResult> conditionFunction;
 		private BehaviourTreeBase action;
+		private IDisposable	m_dispose;
 
 		public void Initialize(Func<BehaviourTreeInstance, ExecutionResult> func, BehaviourTreeBase action, int uuid = 0){
 			this.Init(uuid);
@@ -22,21 +23,34 @@ namespace BehaviourTrees
 		}
 
 
-		public override void Reset ()
-		{
-			//this.actions.Reset();
+		public override void ObserveInit(BehaviourTreeInstance behaviourTreeInstance){
+			m_dispose = behaviourTreeInstance.nodeStateDict.ObserveReplace()
+				.Where(p=>p.Key ==this.action.key)
+				.Subscribe(p=>NextState(p.NewValue, behaviourTreeInstance));
+			this.action.ObserveInit(behaviourTreeInstance);
 		}
 
+
+		public override void Reset ()
+		{
+			this.action.Reset();
+		}
+
+
+		public override void Delete ()
+		{
+			this.m_dispose.Dispose();
+			this.action.Delete();
+			this.conditionFunction = null;
+		}
+
+			
 		public override void Execute(BehaviourTreeInstance behaviourTreeInstance)
 		{
 			base.Execute(behaviourTreeInstance);
 			behaviourTreeInstance.nodeStateDict[this.key] = BehaviourTreeInstance.NodeState.READY;
 
 			if(this.conditionFunction(behaviourTreeInstance).BooleanResult){
-
-				behaviourTreeInstance.nodeStateDict.ObserveReplace()
-					.Where(p=>p.Key ==this.action.key)
-					.Subscribe(p=>NextState(p.NewValue, behaviourTreeInstance));
 				this.action.Execute(behaviourTreeInstance);
 			}
 			else {

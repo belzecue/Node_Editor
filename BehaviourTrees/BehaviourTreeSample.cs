@@ -80,7 +80,7 @@ namespace BehaviourTrees
 
 		IEnumerator WaitCoroutine(){
 			yield return new WaitForSeconds(1.5f);
-			node.Reset();
+			node.Delete();
 		}
 	}
 }

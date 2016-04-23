@@ -225,14 +225,6 @@ namespace NodeEditorFramework
 			// Draw the nodes
 			foreach (Node node in curNodeCanvas.nodes)
 			{
-				/*
-				if(node.Uuid == nowExcuteNodeUuid){
-					node.ChangeColor();
-				}
-				else {
-					node.ResetDefaultColor();
-				}
-				*/
 				node.DrawNode ();
 				if (Event.current.type == EventType.Repaint)
 					node.DrawKnobs ();
@@ -347,12 +339,6 @@ namespace NodeEditorFramework
 		{
 			Event e = Event.current;
 			mousePos = e.mousePosition;
-
-			/*
-			 * //Fix Mac Bug
-			bool leftClick = e.button == 0, rightClick = (e.button ==0 && e.control),
-			mouseDown = e.type == EventType.MouseDown, mousUp = e.type == EventType.MouseUp;
-			*/
 
 			#if UNITY_EDITOR_OSX
 			bool leftClick = e.button == 0, rightClick = (e.button ==0 && e.control),
