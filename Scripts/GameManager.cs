@@ -29,6 +29,7 @@ public class GameManager : SingletonMonoBehaviour<GameManager> {
 			obj.GetComponent<Pawn>().uuid = i;
 			obj.GetComponent<Pawn>().hp = 10;
 			m_poses[i].GetComponent<Pawn>().uuid = i;
+			m_poses[i].GetComponent<Pawn>().hp = -1;
 			m_pawnObjList.Add(obj);
 		}
 	}

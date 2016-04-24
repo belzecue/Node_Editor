@@ -6,7 +6,8 @@ using System;
 using UnityStandardAssets.Characters.ThirdPerson;
 
 /// <summary>
-/// B tree action.
+/// uActionNodeのActionに設定できるメソッド群
+/// Methods that can be set to Action of uActionNode
 /// </summary>
 public class BTreeAction : BTreeActionBase {
 

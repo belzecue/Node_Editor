@@ -2,6 +2,10 @@
 using System.Collections;
 using BehaviourTrees;
 
+/// <summary>
+/// uDecoratorNodeの条件式に設定できるメソッド群
+/// Methods that can be set in the conditional expression of Decorator Node
+/// </summary>
 public class BTreeDecoratorFunc : BTreeDecoratorFuncBase {
 
 	Pawn m_myPawn;

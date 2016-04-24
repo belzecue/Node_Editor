@@ -17,6 +17,10 @@ public class Pawn : MonoBehaviour {
 		get; set;
 	}
 
+	void Awake(){
+		uuid = -1;
+	}
+
 	// Use this for initialization
 	void Start () {
 	
@@ -25,5 +29,27 @@ public class Pawn : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 	
+	}
+
+	void OnDrawGizmos()
+	{
+		#if UNITY_EDITOR
+
+		if(hp<0){
+			return;
+		}
+
+		if(uuid == 0){
+			GUIStyle myStyle = new GUIStyle();
+			myStyle.normal.textColor = Color.blue;
+			UnityEditor.Handles.Label(transform.position + new Vector3(0,2,0), "Player1",myStyle);
+		}
+		else if (uuid == 1) {
+			GUIStyle myStyle = new GUIStyle();
+			myStyle.normal.textColor = Color.red;
+			UnityEditor.Handles.Label(transform.position+ new Vector3(0,2,0), "Player2",myStyle);
+		}
+
+		#endif
 	}
 }
