@@ -46,16 +46,7 @@ namespace BehaviourTrees
 			this.actions.Current.Execute(behaviourTreeInstance);
 
 		}
-
-
-		public override void Reset ()
-		{
-			this.actions.Reset();
-			while(this.actions.MoveNext()){
-				this.actions.Current.Reset();
-			}
-			this.actions.Reset();
-		}
+			
 
 		public override void Delete ()
 		{

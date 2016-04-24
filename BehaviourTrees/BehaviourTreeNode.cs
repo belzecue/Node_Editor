@@ -11,6 +11,7 @@ namespace BehaviourTrees
 
 	/// <summary>
 	/// 全てのBehaviourTreeが継承するクラス
+	/// Class that all of BehaviorTree inherits
 	/// </summary>
 	public abstract class BehaviourTreeBase {
 
@@ -39,9 +40,7 @@ namespace BehaviourTrees
 			behaviourTreeInstance.nowExcuteUuid = m_uuid;
 			#endif
 		}
-
-
-		public abstract void Reset();
+			
 
 		public abstract void Delete();
 			

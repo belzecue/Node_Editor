@@ -7,6 +7,9 @@ using System;
 
 namespace BehaviourTrees
 {
+	/// <summary>
+	/// Behaviour tree を制御するクラス
+	/// </summary>
 	public class BehaviourTreeInstance  {
 		public enum NodeState
 		{
@@ -27,8 +30,6 @@ namespace BehaviourTrees
 
 		private BehaviourTreeBase	rootNode;
 
-		private IDisposable	m_addDispose;
-
 		private IDisposable	m_replaceDispose;
 
 		public int nowExcuteUuid {
@@ -40,10 +41,6 @@ namespace BehaviourTrees
 			this.finishRP = new ReactiveProperty<NodeState>(NodeState.READY);
 
 			this.rootNode = rootNode;
-
-			m_addDispose = this.nodeStateDict.ObserveAdd()
-				.Where(p=>p.Value == NodeState.READY)
-				.Subscribe(p=>SetCurrentNodeKey(p.Key));
 
 			m_replaceDispose = this.nodeStateDict.ObserveReplace()
 				.Where(p=>p.Key == rootNode.key)
@@ -68,18 +65,16 @@ namespace BehaviourTrees
 			this.nodeStateDict.Clear();
 			this.rootNode.Delete();
 			this.finishRP.Dispose();
-			this.m_addDispose.Dispose();
 			this.m_replaceDispose.Dispose();
 		}
 
-			
+		/// <summary>
+		/// Finish the specified state.
+		/// </summary>
+		/// <param name="state">State.</param>
 		void Finish(NodeState state){
 			this.finishRP.Value = state;
 		}
-
-
-		void SetCurrentNodeKey(string key){
-			//Debug.Log(key);
-		}
+			
 	}
 }

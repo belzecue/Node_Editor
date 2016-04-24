@@ -7,7 +7,7 @@ using UniRx;
 namespace BehaviourTrees
 {
 	/// <summary>
-	/// 処理を実行するだけのクラス
+	/// Class of only executes Action
 	/// </summary>
 	public class ActionNode : BehaviourTreeBase
 	{
@@ -30,11 +30,7 @@ namespace BehaviourTrees
 		{
 			this.m_dispose = this.finishRP.Where(p=>p == true).Subscribe(p=> EndCB(behaviourTreeInstance));
 		}
-
-		public override void Reset ()
-		{
 			
-		}
 
 		public override void Delete ()
 		{

@@ -12,6 +12,9 @@ namespace BehaviourTrees
 	/// 成功する子が見つかるまで子を実行する 
 	/// 成功するのが見つかったらこれ以降の処理は行わず Successを返す
 	/// すべて実行しすべてが失敗に終わったら Failureを返す
+	/// Until this find the child to be successful, the one by one run child.
+	/// To stop the processing When you find, return a Success.
+	/// All running all return a Failure When this have finished in failure
 	/// </summary>
 	public class SelectorNode : BehaviourTreeBase {
 
@@ -43,15 +46,7 @@ namespace BehaviourTrees
 			this.actions.MoveNext();
 			this.actions.Current.Execute(behaviourTreeInstance);
 		}
-
-		public override void Reset ()
-		{
-			this.actions.Reset();
-			while(this.actions.MoveNext()){
-				this.actions.Current.Reset();
-			}
-			this.actions.Reset();
-		}
+			
 
 		public override void Delete ()
 		{

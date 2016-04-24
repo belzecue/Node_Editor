@@ -8,6 +8,9 @@ using BehaviourTrees;
 using System;
 using UniRx;
 
+/// <summary>
+/// NodeEditorで作成したScriptableObjectからBehaviourTreeを構築し、実行する
+/// </summary>
 public class BTreeManager : MonoBehaviour {
 
 	[SerializeField, FilePath]
@@ -22,10 +25,17 @@ public class BTreeManager : MonoBehaviour {
 	uBehaviourTreeNode m_topNode;
 	BehaviourTreeBase	m_bTreeBase;
 
+
+	void Awake(){
+		runtimeNodeEditor = GetComponent<RuntimeNodeEditor>();
+		if(runtimeNodeEditor!=null){
+			runtimeNodeEditor.canvasPath = filePath.Replace (Application.dataPath, "Assets");
+		}
+	}
+
 	// Use this for initialization
 	void Start () {
 		m_task = ChangeColorTask;
-		runtimeNodeEditor = GetComponent<RuntimeNodeEditor>();
 		var path = filePath.Replace (Application.dataPath, "Assets");
 		// Load the NodeCanvas
 		var canvas = NodeEditorSaveManager.LoadNodeCanvas (path);
@@ -45,6 +55,10 @@ public class BTreeManager : MonoBehaviour {
 	}
 
 
+	/// <summary>
+	/// Creates the nodes.
+	/// </summary>
+	/// <param name="topNode">Top node.</param>
 	void CreateNodes(uBehaviourTreeNode topNode){
 		m_bTreeBase = CreateBehaviourTreeBase(topNode);
 		node = new BehaviourTreeInstance(m_bTreeBase);
@@ -54,11 +68,9 @@ public class BTreeManager : MonoBehaviour {
 	}
 
 
-	void DeleteNodes(){
-		
-	}
-
-
+	/// <summary>
+	/// Changes the color task.
+	/// </summary>
 	void ChangeColorTask(){
 		if(runtimeNodeEditor!=null && runtimeNodeEditor.canvas!=null){
 			foreach(var one in runtimeNodeEditor.canvas.nodes){

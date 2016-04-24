@@ -8,7 +8,10 @@ using System.Linq;
 namespace BehaviourTrees
 {
 	/// <summary>
-	/// Dicorator node.
+	/// 条件が通ったら子を実行して、子が返すステータスを返す。
+	/// 通らなかったらFailureを返す。
+	/// Run the child Once the condition is through, return the status returned by the children.
+	/// It is not pass return a Failure.
 	/// </summary>
 	public class DecoratorNode : BehaviourTreeBase {
 
@@ -29,13 +32,7 @@ namespace BehaviourTrees
 				.Subscribe(p=>NextState(p.NewValue, behaviourTreeInstance));
 			this.action.ObserveInit(behaviourTreeInstance);
 		}
-
-
-		public override void Reset ()
-		{
-			this.action.Reset();
-		}
-
+			
 
 		public override void Delete ()
 		{

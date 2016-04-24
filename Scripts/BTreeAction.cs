@@ -46,7 +46,7 @@ public class BTreeAction : BTreeActionBase {
 		var heading = m_myPawn.transform.position - m_enemyPawn.transform.position;
 		var distance = heading.magnitude;
 		var dir = -heading / distance;
-		StartCoroutine(MoveCroutine(2f, dir, MoveDir ,m_enemyPawn.transform.localPosition));
+		StartCoroutine(MoveCroutine(0.9f, dir, MoveDir ,m_enemyPawn.transform.localPosition, 1.5f));
 	}
 
 
@@ -57,7 +57,7 @@ public class BTreeAction : BTreeActionBase {
 		var heading = m_myPawn.transform.position - m_placePawn.transform.position;
 		var distance = heading.magnitude;
 		var dir = -heading / distance;
-		StartCoroutine(MoveCroutine(5f, dir, MoveDir,  m_placePawn.transform.localPosition));
+		StartCoroutine(MoveCroutine(3f, dir, MoveDir,  m_placePawn.transform.localPosition, 0.8f));
 	}
 
 
@@ -82,20 +82,20 @@ public class BTreeAction : BTreeActionBase {
 		while (currentTime > 0)
 		{
 			moveDir(dir);
-			currentTime -= Time.deltaTime * 4;
+			currentTime -= Time.deltaTime;
 			yield return null;
 		}
 		m_finishRP.Value = true;
 	}
 
 
-	IEnumerator MoveCroutine(float startTime, Vector3 dir, Action<Vector3> moveDir, Vector3 target){
+	IEnumerator MoveCroutine(float startTime, Vector3 dir, Action<Vector3> moveDir, Vector3 target, float distance){
 		var currentTime = startTime;
 		while (currentTime > 0)
 		{
 			moveDir(dir);
-			currentTime -= Time.deltaTime * 4;
-			if(Vector3.Distance(transform.localPosition, target) < 1.5f){
+			currentTime -= Time.deltaTime;
+			if(Vector3.Distance(transform.localPosition, target) < distance){
 				break;
 			}
 			yield return null;
