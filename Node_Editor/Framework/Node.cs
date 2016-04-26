@@ -210,6 +210,7 @@ namespace NodeEditorFramework
 			GUILayout.BeginArea (bodyRect, GUI.skin.box);
 			// Call NodeGUI
 			GUI.changed = false;
+
 			NodeGUI ();
 			// End NodeGUI frame
 			GUILayout.EndArea ();
@@ -537,8 +538,10 @@ namespace NodeEditorFramework
 			recursiveSearchSurpassed = null;
 			startRecursiveSearchNode = null;
 		}
-
 		#endregion
+
+		#region BehaviourTree
+		public int Uuid = 0;
 
 		#endregion
 	}

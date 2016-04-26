@@ -214,8 +214,8 @@ namespace NodeEditorFramework
 			// Push the active node at the bottom of the draw order.
 			if (Event.current.type == EventType.Layout && curEditorState.selectedNode != null)
 			{
-				curNodeCanvas.nodes.Remove (curEditorState.selectedNode);
-				curNodeCanvas.nodes.Add (curEditorState.selectedNode);
+				//curNodeCanvas.nodes.Remove (curEditorState.selectedNode);
+				//curNodeCanvas.nodes.Add (curEditorState.selectedNode);
 			}
 
 			// Draw the transitions and connections. Has to be drawn before nodes as transitions originate from node centers
@@ -340,9 +340,14 @@ namespace NodeEditorFramework
 			Event e = Event.current;
 			mousePos = e.mousePosition;
 
+			#if UNITY_EDITOR_OSX
+			bool leftClick = e.button == 0, rightClick = (e.button ==0 && e.control),
+			mouseDown = e.type == EventType.MouseDown, mousUp = e.type == EventType.MouseUp;
+			#elif
 			bool leftClick = e.button == 0, rightClick = e.button == 1,
-				mouseDown = e.type == EventType.MouseDown, mousUp = e.type == EventType.MouseUp;
-
+			mouseDown = e.type == EventType.MouseDown, mousUp = e.type == EventType.MouseUp;
+			#endif
+		
 			if (ignoreInput (mousePos))
 				return;
 
@@ -618,7 +623,9 @@ namespace NodeEditorFramework
 
 			default: // Node creation request
 				Node node = Node.Create (callback.message, ScreenToGUIPos (callback.contextClickPos));
-
+				for(int index = 0;index < curNodeCanvas.nodes.Count;index++){
+					curNodeCanvas.nodes[index].Uuid = index;
+				}
 				// Handle auto-connection
 				if (curEditorState.connectOutput != null)
 				{ // If nodeOutput is defined, link it to the first input of the same type
