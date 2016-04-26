@@ -540,6 +540,8 @@ namespace NodeEditorFramework
 		}
 		#endregion
 
+		#endregion
+
 		#region BehaviourTree
 		public int Uuid = 0;
 
